@@ -24,7 +24,7 @@
         name: "{{ item.name }}"
         cloud_init:
           host_name: "{{ item.name }}"
-          authorized_ssh_keys: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqgSSK4ZBrkHVq1RpdxyHJtR0zT3hfQq5f1DivCfjABp2WxZfBl83nDqUlaMgAdIcU7U4IjkAUFGPO/N0USkTNvEz8ZHX9tqAmy6j64gzjhjDVmnIA1iysWO2/Jt501tJZqIsiRPO/6vHvxha6V26ieFGNIG7xrA+rXFEEqY9L14+VPn5DYk4CMh+3JCVRbp/eXsycHaXNoEfSSvYOyWz8jji28ohwOFG9Z6I7pzgg/ZDZHwa6KKRqIAeg8paQdVVefTIKfU5YtXYJp+CnUWNZQyWljZcUuMRUOz+z1cr3JQv+2Idj63GMwRRtp1uSxeTsif8GPgJzK9T7yn7CthJv'
+          authorized_ssh_keys: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqgSSK4ZBrkHVq1RpdxyHJtR0zT3hfQq5f1DivCfjABp2WxZfBl83nDqUlaMgAdIcU7U4IjkAUFGPO/N0USkTNvEz8ZHX9tqAmy6j64gzjhjDVmnIA1iysWO2/Jt501tJZqIsiRPO/6vHvxha6V26ieFGNIG7xrA+rXFEEqY9L14+VPn5DYk4CMh+3JCVRbp/eXsycHaXNoEfSSvYOyWz8jji28ohwOFG9Z6I7pzgg/ZDZHwa6KKRqIAeg8paQdVVefTIKfU5YtXYJp+CnUWNZQyWljZcUuMRUOz+z1cr3JQv+2Idj63GMwRRtp1uSxeTsif8GPgJzK9T7yn7CthJv' # noqa 204
         state: running
         cpu_cores: "{{ item.cpu }}"
         memory: "{{ item.memory }}"
