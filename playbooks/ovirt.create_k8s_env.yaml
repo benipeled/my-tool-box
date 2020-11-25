@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    engine: "{{ engine }}"
+    cluster: "{{ cluster }}"
+    template: "{{ template }}"
+
+  pre_tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+        url: "https://{{ engine }}/ovirt-engine/api"
+        kerberos: true
+        insecure: true
+
+  tasks:
+    - name: "Create kubernetes VMs"
+      ovirt_vm:
+        auth: "{{ ovirt_auth }}"
+        cluster: "{{ cluster }}"
+        template: "{{ template }}"
+        name: "{{ item.name }}"
+        cloud_init:
+          host_name: "{{ item.name }}"
+          authorized_ssh_keys: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqgSSK4ZBrkHVq1RpdxyHJtR0zT3hfQq5f1DivCfjABp2WxZfBl83nDqUlaMgAdIcU7U4IjkAUFGPO/N0USkTNvEz8ZHX9tqAmy6j64gzjhjDVmnIA1iysWO2/Jt501tJZqIsiRPO/6vHvxha6V26ieFGNIG7xrA+rXFEEqY9L14+VPn5DYk4CMh+3JCVRbp/eXsycHaXNoEfSSvYOyWz8jji28ohwOFG9Z6I7pzgg/ZDZHwa6KKRqIAeg8paQdVVefTIKfU5YtXYJp+CnUWNZQyWljZcUuMRUOz+z1cr3JQv+2Idj63GMwRRtp1uSxeTsif8GPgJzK9T7yn7CthJv'
+        state: running
+        cpu_cores: "{{ item.cpu }}"
+        memory: "{{ item.memory }}"
+        memory_guaranteed: "{{ item.memory }}"
+        wait: false
+      with_items:
+        - {name: 'bpeled-master-1', cpu: 2, memory: 4GiB}
+        - {name: 'bpeled-master-2', cpu: 2, memory: 4GiB}
+        - {name: 'bpeled-master-3', cpu: 2, memory: 4GiB}
+        - {name: 'bpeled-node-1', cpu: 4, memory: 16GiB}
+        - {name: 'bpeled-node-2', cpu: 4, memory: 16GiB}
+        - {name: 'bpeled-node-3', cpu: 4, memory: 16GiB}
+
+  post_tasks:
+    - name: Logout from oVirt
+      ovirt_auth:
+        ovirt_auth: "{{ ovirt_auth }}"
+        state: absent
