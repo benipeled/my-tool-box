@@ -1,6 +1,13 @@
-name: Main CI
+name: ansible-lint
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    path:
+      - 'ansible/**'
+  pull_request:
+    path:
+      - 'ansible/**'
+  workflow_dispatch:
 
 jobs:
   build:
