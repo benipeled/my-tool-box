@@ -31,12 +31,10 @@
         memory_guaranteed: "{{ item.memory }}"
         wait: false
       with_items:
-        - {name: 'bpeled-master-1', cpu: 2, memory: 4GiB}
-        - {name: 'bpeled-master-2', cpu: 2, memory: 4GiB}
-        - {name: 'bpeled-master-3', cpu: 2, memory: 4GiB}
-        - {name: 'bpeled-node-1', cpu: 4, memory: 16GiB}
-        - {name: 'bpeled-node-2', cpu: 4, memory: 16GiB}
-        - {name: 'bpeled-node-3', cpu: 4, memory: 16GiB}
+        - {name: 'bpelled-master-1', cpu: 2, memory: 4GiB}
+        - {name: 'bpelled-node-1', cpu: 4, memory: 16GiB}
+        - {name: 'bpelled-node-2', cpu: 4, memory: 16GiB}
+        - {name: 'bpelled-node-3', cpu: 4, memory: 16GiB}
 
   post_tasks:
     - name: Logout from oVirt
