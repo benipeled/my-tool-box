@@ -23,8 +23,32 @@ __Usage Example__
 ansible-playbook ovirt.create_k8s_env.yaml \
     -e "engine=engine.example.com" \
     -e "cluster=Engineering" \
-    -e "template=CentOS_8_2_with_docker" \
+    -e "template=CentOS_8_2_with_docker"
 ```
 
 __Additional information__  
 The ovirt-auth made by kerberos, see `ovirt_auth` module for more auth options.
+
+
+ovirt.restore_k8s_env_from_snapshot.yaml
+--------
+__Overview__  
+Restore [oVirt](https://www.ovirt.org) VMs from snapshot 
+
+
+__Requirements__  
+* python-ovirt-engine-sdk4
+
+
+__Variables__  
+
+| Name  | Description | Example
+| -------------| ------------ | ------------ |
+| engine | ovirt engine FQDN | engine.example.com
+
+
+__Usage Example__  
+```shell
+ansible-playbook ovirt.restore_k8s_env_from_snapshot.yaml \
+    -e "engine=engine.example.com"
+```
