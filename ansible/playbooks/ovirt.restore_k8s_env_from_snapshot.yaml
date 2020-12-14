@@ -1,0 +1,55 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    engine: "{{ engine }}"
+
+  pre_tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+        url: "https://{{ engine }}/ovirt-engine/api"
+        kerberos: true
+        insecure: true
+
+  tasks:
+    - name: "Stop kubernetes VMs"
+      ovirt_vm:
+        auth: "{{ ovirt_auth }}"
+        name: "{{ item }}"
+        state: stopped
+      with_items:
+        - bpelled-master-1
+        - bpelled-node-1
+        - bpelled-node-2
+        - bpelled-node-3
+
+    - name: "Restore kubernetes VMs"
+      ovirt_snapshot:
+        auth: "{{ ovirt_auth }}"
+        state: restore
+        vm_name: "{{ item.name }}"
+        snapshot_id: "{{ item.snapshot_id }}"
+      with_items:
+        - { name: 'bpelled-master-1', snapshot_id: 'cdfaa957-1cc2-404c-8205-3d48245d9eee' }
+        - { name: 'bpelled-node-1', snapshot_id: '29657936-526a-42d4-af40-5790a3d15705' }
+        - { name: 'bpelled-node-2', snapshot_id: 'b25f429a-03d1-4f26-bdc3-544322e995b8' }
+        - { name: 'bpelled-node-3', snapshot_id: '1a49cbe1-b55f-441b-8776-da1ce21b78d0' }
+
+    - name: "Start kubernetes VMs"
+      ovirt_vm:
+        auth: "{{ ovirt_auth }}"
+        name: "{{ item }}"
+        state: running
+      with_items:
+        - bpelled-master-1
+        - bpelled-node-1
+        - bpelled-node-2
+        - bpelled-node-3
+
+  post_tasks:
+    - name: Logout from oVirt
+      ovirt_auth:
+        ovirt_auth: "{{ ovirt_auth }}"
+        state: absent
