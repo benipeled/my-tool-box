@@ -1,0 +1,61 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# Bash modificatoins
+# ------------------
+
+HISTSIZE=100000
+HISTFILESIZE=200000
+
+git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
+export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(git_branch)\[\033[00m\] $ "
+
+# User specific aliases
+# ---------------------
+
+# Short and clear git-log summary
+alias log='git log --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+alias logall='git log --all --graph --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+alias mylog='git log --author=$USER --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+
+# Show folders/files size in current directory
+alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)) {if($s<1024) {printf("%.1f",$s);print "$_\t$f"; last};$s=$s/1024}'\'
+
+# The 20 most used processes (by memory)
+alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
+
+# Keep it around when you need it many times
+alias epel='echo "yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"'
+
+alias less='less -I'
+alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias black='black --line-length=78 --target-version=py36'
+alias cdr='cd /home/$USER/repos/'
+alias cdm='cd /home/$USER/repos/my-tool-box'
+alias rebase='git fetch --all && git pull --rebase'
+alias k='kubectl'
+export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
+
+# User specific Functions
+# -----------------------
+
+# Delete a line from known_hosts ex. sshrm 246
+function sshrm() { /usr/bin/sed -i "$1d" $HOME/.ssh/known_hosts; }
+
+# Activate/Deactivate console connection by ipmitool
+function solactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol activate; }
+function soldeactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol deactivate; }
