@@ -1,6 +1,9 @@
 # Bash modificatoins
 # ------------------
 
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
 HISTSIZE=100000
 HISTFILESIZE=200000
 
