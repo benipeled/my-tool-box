@@ -2,9 +2,13 @@
 # Run this script directly by:
 # 	curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/env_setup.sh | bash
 
+# Add repos
+sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+
+
 PACKAGES="wget vim ansible git flameshot \
 	yakuake keepass gnome-tweaks \
-	podman podman-compose awscli ipython telnet vim-default-editor
+	podman podman-compose awscli ipython telnet vim-default-editor gh
 	"
 
 
