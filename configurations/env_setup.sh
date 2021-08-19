@@ -19,7 +19,7 @@ sudo dnf upgrade -y
 sudo dnf install -y $PACKAGES
 
 # Update .bashrc file (if not updated)
-if ! grep -q "My Bashrc Modificatoins" ~/.bashrc
+if ! grep -q "My bash modificatoins" ~/.bashrc
 then
 	curl https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/bashrc >> ~/.bashrc
 fi
