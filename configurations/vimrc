@@ -1,0 +1,19 @@
+" Show line numbers
+set number
+
+" Show file stats
+set ruler
+
+" Blink cursor on error instead of beeping (grr)
+set visualbell
+
+" Status bar
+set laststatus=2
+
+" Line breake
+set textwidth=82
+set colorcolumn=82
+
+" Last line
+set showmode
+set showcmd
