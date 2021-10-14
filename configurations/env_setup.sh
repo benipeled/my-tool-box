@@ -7,7 +7,9 @@
 
 PACKAGES="wget vim ansible git flameshot nmap \
 	yakuake keepass gnome-tweaks \
-	podman podman-compose awscli ipython telnet vim-default-editor gh npm
+	podman podman-compose awscli ipython telnet \
+	vim-default-editor gh npm terraform python3-jinja2-cli \
+	packer	
 	"
 REMOVE_PACKAGES="nano-default-editor"
 REPO_FOLDER=~/repos
@@ -16,7 +18,8 @@ REPO_FOLDER=~/repos
 ########### Configurations #############
 
 # Add repos
-sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo # add github repo
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo # add hashicorp repo
 
 # Update .bashrc file (if not updated)
 if ! grep -q "My bash modificatoins" ~/.bashrc
