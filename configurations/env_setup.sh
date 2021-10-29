@@ -22,7 +22,7 @@ sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.re
 sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo # add hashicorp repo
 
 # Add Google Chrome repo
-echo "[google-chrome]
+sudo echo "[google-chrome]
 name=google-chrome
 baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
 enabled=1
