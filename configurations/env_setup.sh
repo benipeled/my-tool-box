@@ -9,7 +9,7 @@ PACKAGES="wget vim ansible git flameshot nmap \
 	yakuake keepass gnome-tweaks \
 	podman podman-compose awscli ipython telnet \
 	vim-default-editor gh npm terraform python3-jinja2-cli \
-	packer	
+	packer google-chrome-stable
 	"
 REMOVE_PACKAGES="nano-default-editor"
 REPO_FOLDER=~/repos
@@ -20,6 +20,15 @@ REPO_FOLDER=~/repos
 # Add repos
 sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo # add github repo
 sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo # add hashicorp repo
+
+# Add Google Chrome repo
+echo "[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub" > /etc/yum.repos.d/google-chrome.repo
+
 
 # Update .bashrc file (if not updated)
 if ! grep -q "My bash modificatoins" ~/.bashrc
