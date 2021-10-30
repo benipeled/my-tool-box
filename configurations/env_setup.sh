@@ -12,6 +12,7 @@ PACKAGES="wget vim ansible git flameshot nmap \
 	packer google-chrome-stable
 	"
 REMOVE_PACKAGES="nano-default-editor"
+NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
 
 
@@ -52,8 +53,9 @@ sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install pycharm-community --classic
 
 # Install npm packages
-sudo npm install -g npm-groovy-lint
-
+for package in $NPM_PACKAGES; do
+  sudo npm list $package  && echo "$package is already installed" || sudo npm install $package
+done
 
 ########### GIT #############
 
