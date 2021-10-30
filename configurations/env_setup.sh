@@ -74,3 +74,8 @@ popd
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install -y flathub org.gnome.Extensions
 
+# Configure global git user
+
+git config --global user.name "Beni Peled"
+git config --global user.email benipeled@gmail.com
+
