@@ -9,7 +9,7 @@ PACKAGES="wget vim ansible git flameshot nmap \
 	yakuake keepass gnome-tweaks \
 	podman podman-compose awscli ipython telnet \
 	vim-default-editor gh npm terraform python3-jinja2-cli \
-	packer google-chrome-stable vlc
+	packer google-chrome-stable vlc python3-pip htop
 	"
 REMOVE_PACKAGES="nano-default-editor"
 NPM_PACKAGES='npm-groovy-lint'
