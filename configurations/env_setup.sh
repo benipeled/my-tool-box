@@ -14,6 +14,7 @@ PACKAGES="wget vim ansible git flameshot nmap \
 REMOVE_PACKAGES="nano-default-editor"
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
+MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image"
 
 
 ########### Configurations #############
@@ -65,10 +66,9 @@ mkdir $REPO_FOLDER
 
 # Clone git repos
 pushd $REPO_FOLDER
-git clone git@github.com:benipeled/my-tool-box.git
-git clone git@github.com:benipeled/scylla-pkg.git
-git clone git@github.com:benipeled/scylla-machine-image.git
-git clone git@github.com:awslabs/aws-cloudformation-templates.git
+for repo in $MY_GIT_REPOS; do
+  git clone git@github.com:benipeled/$repo.git
+done
 popd
 
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
