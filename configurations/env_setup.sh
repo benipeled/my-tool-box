@@ -5,11 +5,16 @@
 
 ########### Variables #############
 
-PACKAGES="wget vim ansible git flameshot nmap \
+PACKAGES="wget vim ansible \
+	git flameshot nmap \
 	yakuake keepass gnome-tweaks \
-	podman podman-compose awscli ipython telnet \
-	vim-default-editor gh npm terraform python3-jinja2-cli \
-	packer google-chrome-stable vlc python3-pip htop
+	podman podman-compose buildah \
+	awscli ipython telnet \
+	vim-default-editor \
+	npm gh vlc htop \
+	terraform packer \
+	google-chrome-stable \
+	python3-pip python3-jinja2-cli \
 	"
 REMOVE_PACKAGES="nano-default-editor"
 NPM_PACKAGES='npm-groovy-lint'
