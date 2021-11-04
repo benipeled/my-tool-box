@@ -35,7 +35,7 @@ name=google-chrome
 baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
 enabled=1
 gpgcheck=1
-gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub' > /etc/yum.repos.d/google-chrome.repo
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub' | sudo tee /etc/yum.repos.d/google-chrome.repo >/dev/null
 
 
 # Update .bashrc file (if not updated)
