@@ -14,7 +14,7 @@ PACKAGES="wget vim ansible git flameshot nmap \
 REMOVE_PACKAGES="nano-default-editor"
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
-MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image"
+MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
 
 
 ########### Configurations #############
