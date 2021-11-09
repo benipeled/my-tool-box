@@ -21,6 +21,22 @@ NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
 MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
 
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+NOCOLOR="\033[0m"
+
+
+########## Functions #############
+
+function run_command {
+        eval $* 1>/dev/null
+        exit_status=$?
+        if [ $exit_status -eq 0 ]; then
+          echo -e "${GREEN}[  OK  ]${NOCOLOR} $*"
+        else
+          echo -e "${RED}[  FAILED  ]${NOCOLOR} $*"
+        fi
+}
 
 ########### Configurations #############
 
