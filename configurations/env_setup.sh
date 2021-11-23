@@ -100,3 +100,8 @@ flatpak install -y flathub org.gnome.Extensions
 git config --global user.name "Beni Peled"
 git config --global user.email benipeled@gmail.com
 
+# Gnome Extensions
+gnome-extensions disable background-logo@fedorahosted.org
+gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
+gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
+
