@@ -105,3 +105,10 @@ gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
 gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
 
+# Keyboard Shortcuts
+# Note: for adding more shortcuts, make sure to increase the the 'custom' id, ex. custom1, custom2 etc.
+# Flameshot
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name "Flameshot"
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command "flameshot gui"
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding "<Ctrl><Alt>Q"
