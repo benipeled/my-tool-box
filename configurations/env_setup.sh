@@ -77,7 +77,7 @@ sudo snap install pycharm-community --classic
 
 # Install npm packages
 for package in $NPM_PACKAGES; do
-  sudo npm list $package  && echo "$package is already installed" || sudo npm install $package
+  sudo npm list $package  && echo "$package is already installed" || sudo npm install --global $package
 done
 
 ########### GIT #############
