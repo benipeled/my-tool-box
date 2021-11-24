@@ -30,12 +30,21 @@ NOCOLOR="\033[0m"
 ########## Functions #############
 
 function run_command {
-        eval $* 1>/dev/null
+  # This function gets two arguments, `description` and `command`
+  #
+  # @description: a description of the command will be ran
+  # @command: the actuall command to run
+  #
+  # Example:
+  #   run_command "Install git" sudo dnf install git
+
+        eval ${*:2} 1>/dev/null
         exit_status=$?
         if [ $exit_status -eq 0 ]; then
-          echo -e "${GREEN}[  OK  ]${NOCOLOR} $*"
+          echo -e "${GREEN}[  OK  ]${NOCOLOR} $1"
         else
-          echo -e "${RED}[  FAILED  ]${NOCOLOR} $*"
+          echo -e "${RED}[  FAILED  ]${NOCOLOR} $1"
+          exit 1
         fi
 }
 
