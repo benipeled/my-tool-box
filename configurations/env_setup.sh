@@ -17,6 +17,7 @@ PACKAGES="wget vim ansible \
 	python3-pip python3-jinja2-cli \
 	"
 REMOVE_PACKAGES="nano-default-editor"
+PIP_PACKAGES='black'
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
 MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
@@ -74,6 +75,11 @@ sudo ln -s /var/lib/snapd/snap /snap
 
 # Install pycharm
 sudo snap install pycharm-community --classic
+
+# Install pip packages
+for package in $PIP_PACKAGES; do
+  pip show -q $package && echo "pip: $package is already installed" || pip install $package
+done
 
 # Install npm packages
 for package in $NPM_PACKAGES; do
