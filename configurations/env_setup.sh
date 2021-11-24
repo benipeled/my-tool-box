@@ -100,11 +100,11 @@ done
 mkdir $REPO_FOLDER
 
 # Clone git repos
-pushd $REPO_FOLDER
+pushd $REPO_FOLDER "$@" > /dev/null
 for repo in $MY_GIT_REPOS; do
   git clone git@github.com:benipeled/$repo.git
 done
-popd
+popd "$@" > /dev/null
 
 run_command "Add flatpak repo (flathub)" flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 run_command "Install gnome extension (Extensions)" flatpak install -y flathub org.gnome.Extensions
