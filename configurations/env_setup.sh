@@ -83,7 +83,7 @@ done
 
 # Install npm packages
 for package in $NPM_PACKAGES; do
-  sudo npm list $package  && echo "$package is already installed" || sudo npm install --global $package
+  sudo npm list --global npm-groovy-lint 1> /dev/null && echo "npm: npm-groovy-lint is already installed" || sudo npm install --global npm-groovy-lint
 done
 
 ########### GIT #############
