@@ -17,7 +17,7 @@ PACKAGES="wget vim ansible \
 	python3-pip python3-jinja2-cli \
 	"
 REMOVE_PACKAGES="nano-default-editor"
-PIP_PACKAGES='black'
+PIP_PACKAGES='black api4jenkins boto3'
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
 MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
