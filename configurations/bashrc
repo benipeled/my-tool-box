@@ -4,8 +4,11 @@
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+export GIT_REPO_DIR="$HOME/repos"
+
 HISTSIZE=100000
 HISTFILESIZE=200000
+
 
 git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
 export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(git_branch)\[\033[00m\] $ "
@@ -30,12 +33,13 @@ alias epel='echo "yum -y install https://dl.fedoraproject.org/pub/epel/epel-rele
 alias less='less -I'
 alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias black='black --line-length=78 --target-version=py36'
-alias cdr='cd /home/$USER/repos/'
-alias cdm='cd /home/$USER/repos/my-tool-box'
-alias cdp='cd /home/$USER/repos/scylla-pkg'
+alias cdr='cd $GIT_REPO_DIR'
+alias cdm='cd $GIT_REPO_DIR/my-tool-box'
+alias cdp='cd $GIT_REPO_DIR/scylla-pkg'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias k='kubectl'
+alias docker='podman'
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
 # User specific Functions
