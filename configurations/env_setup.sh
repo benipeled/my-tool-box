@@ -74,7 +74,7 @@ fi
 
 # Remove unwanted packages; Update; Install my packages
 run_command "Remove unwanted packages" sudo dnf remove -y $REMOVE_PACKAGES
-run_command "Update packages" sudo dnf upgrade -y
+sudo dnf upgrade -y
 run_command "Install packages" sudo dnf install -y $PACKAGES
 
 # Install snapd
