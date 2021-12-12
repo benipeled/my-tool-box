@@ -20,7 +20,7 @@ REMOVE_PACKAGES="nano-default-editor"
 PIP_PACKAGES='black api4jenkins boto3'
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
-MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
+MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-cli"
 
 # For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 RED="\033[1;31m"
@@ -100,12 +100,18 @@ done
 ########### GIT #############
 
 # Create git repositories folder
-mkdir $REPO_FOLDER
+if [ ! -d $REPO_FOLDER ]; then
+  run_command "Create repo folder ($REPO_FOLDER)" mkdir $REPO_FOLDER
+fi
 
 # Clone git repos
 pushd $REPO_FOLDER "$@" > /dev/null
 for repo in $MY_GIT_REPOS; do
-  git clone git@github.com:benipeled/$repo.git
+  if [ ! -d $repo ]; then
+    run_command "Clone git repository: $repo" git clone git@github.com:benipeled/$repo.git
+  else
+    echo -e "${GRAY}[  INFO  ]${NOCOLOR} Folder $repo is exists which means the repository is probably already cloned"
+  fi
 done
 popd "$@" > /dev/null
 
