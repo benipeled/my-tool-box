@@ -22,8 +22,10 @@ NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
 MY_GIT_REPOS="my-tool-box aws-cloudformation-templates scylla scylla-pkg scylla-machine-image scylla-cli"
 
+# For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 RED="\033[1;31m"
 GREEN="\033[1;32m"
+GRAY="\e[90m"
 NOCOLOR="\033[0m"
 
 
@@ -38,6 +40,7 @@ function run_command {
   # Example:
   #   run_command "Install git" sudo dnf install git
 
+        echo -e "${GRAY}[  INFO  ]${NOCOLOR} starting: $1"
         eval ${*:2} 1>/dev/null
         exit_status=$?
         if [ $exit_status -eq 0 ]; then
