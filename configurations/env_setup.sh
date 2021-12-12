@@ -113,8 +113,8 @@ run_command "Add flatpak repo (flathub)" flatpak remote-add --if-not-exists flat
 run_command "Install gnome extension (Extensions)" flatpak install -y flathub org.gnome.Extensions
 
 # Configure global git user
-run_command "Configure global git user" git config --global user.name "Beni Peled" && git config --global user.email benipeled@gmail.com
-
+run_command "Configure global git user" git config --global user.name \"Beni Peled\"
+run_command "Configure global git email" git config --global user.email benipeled@gmail.com
 # Gnome Extensions
 gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
