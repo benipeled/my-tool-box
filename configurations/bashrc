@@ -30,6 +30,7 @@ alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
 # Keep it around when you need it many times
 alias epel='echo "yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"'
 
+alias setup='$GIT_REPO_DIR/my-tool-box/configurations/env_setup.sh'
 alias less='less -I'
 alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias black='black --line-length=78 --target-version=py36'
@@ -40,6 +41,8 @@ alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias k='kubectl'
 alias docker='podman'
+alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/github/get_my_issues.py"
+
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
 # User specific Functions
