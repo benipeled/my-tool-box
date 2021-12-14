@@ -14,13 +14,13 @@ PACKAGES="wget vim ansible \
 	npm gh vlc htop \
 	terraform packer \
 	google-chrome-stable \
-	python3-pip python3-jinja2-cli \
+	python3-pip python3-jinja2-cli golang \
 	"
 REMOVE_PACKAGES="nano-default-editor"
 PIP_PACKAGES='black api4jenkins boto3'
 NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
-MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-cli"
+MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-manager scylla-cli"
 
 # For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 RED="\033[1;31m"
