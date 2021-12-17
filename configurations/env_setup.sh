@@ -121,6 +121,14 @@ run_command "Install gnome extension (Extensions)" flatpak install -y flathub or
 # Configure global git user
 run_command "Configure global git user" git config --global user.name \"Beni Peled\"
 run_command "Configure global git email" git config --global user.email benipeled@gmail.com
+
+# Configure git diff-highlight
+sudo ln -s '/usr/share/git-core/contrib/diff-highlight' '/usr/local/bin/diff-highlight'
+git config --global pager.diff "diff-highlight | less"
+git config --global pager.show "diff-highlight | less"
+
+
+
 # Gnome Extensions
 gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
