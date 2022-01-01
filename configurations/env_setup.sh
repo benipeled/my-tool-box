@@ -108,7 +108,7 @@ fi
 pushd $REPO_FOLDER "$@" > /dev/null
 for repo in $MY_GIT_REPOS; do
   if [ ! -d $repo ]; then
-    run_command "Clone git repository: $repo" git clone git@github.com:benipeled/$repo.git
+      run_command "Clone git repository: $repo (git@github.com:benipeled/$repo.git)" git clone git@github.com:benipeled/$repo.git
   else
     echo -e "${GRAY}[  INFO  ]${NOCOLOR} Folder $repo is exists which means the repository is probably already cloned"
   fi
@@ -123,12 +123,12 @@ run_command "Configure global git user" git config --global user.name \"Beni Pel
 run_command "Configure global git email" git config --global user.email benipeled@gmail.com
 
 # Configure git diff-highlight
-sudo ln -s '/usr/share/git-core/contrib/diff-highlight' '/usr/local/bin/diff-highlight'
-git config --global pager.diff "diff-highlight | less"
-git config --global pager.show "diff-highlight | less"
-
-
-
+GIT_DIFF_LINK='/usr/local/bin/diff-highlight'
+if [ ! -h $GIT_DIFF_LINK ]; then
+    sudo ln -s '/usr/share/git-core/contrib/diff-highlight' '/usr/local/bin/diff-highlight'
+    git config --global pager.diff "diff-highlight | less"
+    git config --global pager.show "diff-highlight | less"
+fi
 # Gnome Extensions
 gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
