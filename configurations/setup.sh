@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run this script directly by:
-# 	curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/env_setup.sh | sudo bash
+# 	curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/setup.sh | sudo bash
 
 
 ########### Variables #############
