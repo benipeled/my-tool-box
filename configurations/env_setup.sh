@@ -84,8 +84,11 @@ run_command "Install packages" sudo dnf install -y $PACKAGES
 sudo dnf install -y snapd
 sudo ln -s /var/lib/snapd/snap /snap
 
+# should be changed to dnf repo for auto package-mgmt something like
+#   https://www.linuxcapable.com/how-to-install-pycharm-ide-on-fedora-35/
+#
 # Install pycharm
-sudo snap install pycharm-community --classic
+#sudo snap install pycharm-community --classic
 
 # Install pip packages
 for package in $PIP_PACKAGES; do

@@ -6,8 +6,9 @@ export EDITOR="$VISUAL"
 
 export GIT_REPO_DIR="$HOME/repos"
 
-HISTSIZE=100000
-HISTFILESIZE=200000
+export HISTSIZE=
+export HISTFILESIZE=
+export HISTTIMEFORMAT="[%F %T] "
 
 
 git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
@@ -37,11 +38,11 @@ alias black='black --line-length=78 --target-version=py36'
 alias cdr='cd $GIT_REPO_DIR'
 alias cdm='cd $GIT_REPO_DIR/my-tool-box'
 alias cdp='cd $GIT_REPO_DIR/scylla-pkg'
+alias cds='cd $GIT_REPO_DIR/scylladb'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias k='kubectl'
-alias docker='podman'
-alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/github/get_my_issues.py"
+alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/github/get_issues.py"
 
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
@@ -50,7 +51,15 @@ export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
 # Delete a line from known_hosts ex. sshrm 246
 function sshrm() { /usr/bin/sed -i "$1d" $HOME/.ssh/known_hosts; }
+function jenkins-validation() { curl -X POST --user $JENKINS_USERNAME:$JENKINS_PASSWORD -F "jenkinsfile=<$1" https://$JENKINS_URL/pipeline-model-converter/validate; }
 
 # Activate/Deactivate console connection by ipmitool
 function solactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol activate; }
 function soldeactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol deactivate; }
+
+# git rebase interactive
+function rr () { git rebase -i HEAD~$1; }
+
+export PATH=$PATH:/home/beni.peled/bin
+
+source '/home/beni.peled/lib/azure-cli/az.completion'
