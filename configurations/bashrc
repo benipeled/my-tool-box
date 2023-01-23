@@ -4,6 +4,7 @@
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+export GITHUB_TOKEN='<ADD-YOUR-TOKEN-HERE>'
 export GIT_REPO_DIR="$HOME/repos"
 
 export HISTSIZE=
@@ -27,9 +28,6 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 # The 20 most used processes (by memory)
 alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
-
-# Keep it around when you need it many times
-alias epel='echo "yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"'
 
 alias setup='$GIT_REPO_DIR/my-tool-box/configurations/setup.sh'
 alias less='less -I'
