@@ -18,9 +18,8 @@ PACKAGES="wget vim ansible \
 	"
 REMOVE_PACKAGES="nano-default-editor"
 PIP_PACKAGES='black api4jenkins boto3'
-NPM_PACKAGES='npm-groovy-lint'
 REPO_FOLDER=~/repos
-MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-manager scylla-cli"
+MY_GIT_REPOS="my-tool-box scylladb scylla-pkg scylla-machine-image scylla-manager"
 
 # For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 RED="\033[1;31m"
@@ -56,7 +55,7 @@ function run_command {
 # Add repos
 run_command "Add github RPM repository" sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 run_command "Add hashicorp RPM repository" sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+#run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
 # Add Google Chrome repo
 echo '[google-chrome]
@@ -81,8 +80,8 @@ sudo dnf upgrade -y
 run_command "Install packages" sudo dnf install -y $PACKAGES
 
 # Install snapd
-sudo dnf install -y snapd
-sudo ln -s /var/lib/snapd/snap /snap
+#sudo dnf install -y snapd
+#sudo ln -s /var/lib/snapd/snap /snap
 
 # should be changed to dnf repo for auto package-mgmt something like
 #   https://www.linuxcapable.com/how-to-install-pycharm-ide-on-fedora-35/
@@ -93,11 +92,6 @@ sudo ln -s /var/lib/snapd/snap /snap
 # Install pip packages
 for package in $PIP_PACKAGES; do
   pip show -q $package && echo "pip: $package is already installed" || run_command "Install $package" pip install $package
-done
-
-# Install npm packages
-for package in $NPM_PACKAGES; do
-  sudo npm list --global npm-groovy-lint 1> /dev/null && echo "npm: npm-groovy-lint is already installed" || run_command "Install $package" sudo npm install --global npm-groovy-lint
 done
 
 ########### GIT #############
