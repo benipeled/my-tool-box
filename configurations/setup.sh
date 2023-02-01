@@ -15,6 +15,7 @@ PACKAGES="wget vim ansible \
 	terraform packer \
 	google-chrome-stable \
 	python3-pip python3-jinja2-cli golang \
+	pycharm-community \
 	"
 REMOVE_PACKAGES="nano-default-editor"
 PIP_PACKAGES='black api4jenkins boto3'
@@ -66,6 +67,15 @@ gpgcheck=1
 gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub' | sudo tee /etc/yum.repos.d/google-chrome.repo >/dev/null
 
 
+# Add PyCharm repo
+echo '[phracek-PyCharm]
+name=Copr repo for PyCharm owned by phracek
+baseurl=https://copr-be.cloud.fedoraproject.org/results/phracek/PyCharm/fedora-$releasever-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/phracek/PyCharm/pubkey.gpg
+enabled=1' | sudo tee /etc/yum.repos.d/pycharm-phracek-copr.repo >/dev/null
+
 if ! grep -q "My bash modificatoins" ~/.bashrc
 then
 	run_command "Update .bashrc file" curl https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/bashrc >> ~/.bashrc
@@ -78,16 +88,6 @@ fi
 run_command "Remove unwanted packages" sudo dnf remove -y $REMOVE_PACKAGES
 sudo dnf upgrade -y
 run_command "Install packages" sudo dnf install -y $PACKAGES
-
-# Install snapd
-#sudo dnf install -y snapd
-#sudo ln -s /var/lib/snapd/snap /snap
-
-# should be changed to dnf repo for auto package-mgmt something like
-#   https://www.linuxcapable.com/how-to-install-pycharm-ide-on-fedora-35/
-#
-# Install pycharm
-#sudo snap install pycharm-community --classic
 
 # Install pip packages
 for package in $PIP_PACKAGES; do
