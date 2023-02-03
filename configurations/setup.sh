@@ -7,7 +7,7 @@
 
 PACKAGES="wget vim ansible \
 	git flameshot nmap \
-	yakuake keepass gnome-tweaks \
+	yakuake keepassxc gnome-tweaks \
 	podman podman-compose buildah \
 	awscli ipython telnet \
 	vim-default-editor \
@@ -20,7 +20,7 @@ PACKAGES="wget vim ansible \
 REMOVE_PACKAGES="nano-default-editor"
 PIP_PACKAGES='black api4jenkins boto3'
 REPO_FOLDER=~/repos
-MY_GIT_REPOS="my-tool-box scylladb scylla-pkg scylla-machine-image scylla-manager"
+MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-manager"
 
 # For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 RED="\033[1;31m"
@@ -56,7 +56,7 @@ function run_command {
 # Add repos
 run_command "Add github RPM repository" sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 run_command "Add hashicorp RPM repository" sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-#run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
 # Add Google Chrome repo
 echo '[google-chrome]
@@ -112,8 +112,6 @@ for repo in $MY_GIT_REPOS; do
 done
 popd "$@" > /dev/null
 
-run_command "Add flatpak repo (flathub)" flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-run_command "Install gnome extension (Extensions)" flatpak install -y flathub org.gnome.Extensions
 
 # Configure global git user
 run_command "Configure global git user" git config --global user.name \"Beni Peled\"
@@ -126,6 +124,7 @@ if [ ! -h $GIT_DIFF_LINK ]; then
     git config --global pager.diff "diff-highlight | less"
     git config --global pager.show "diff-highlight | less"
 fi
+
 # Gnome Extensions
 gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
