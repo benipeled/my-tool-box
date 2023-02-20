@@ -18,7 +18,7 @@ PACKAGES="wget vim ansible \
 	pycharm-community \
 	"
 REMOVE_PACKAGES="nano-default-editor"
-PIP_PACKAGES='black api4jenkins boto3'
+PIP_PACKAGES='black api4jenkins boto3 prettytable'
 REPO_FOLDER=~/repos
 MY_GIT_REPOS="my-tool-box scylla scylla-pkg scylla-machine-image scylla-manager"
 
@@ -28,8 +28,6 @@ GREEN="\033[1;32m"
 GRAY="\e[90m"
 NOCOLOR="\033[0m"
 
-
-########## Functions #############
 
 function run_command {
   # This function gets two arguments, `description` and `command`
@@ -51,12 +49,10 @@ function run_command {
         fi
 }
 
-########### Configurations #############
-
 # Add repos
 run_command "Add github RPM repository" sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 run_command "Add hashicorp RPM repository" sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+run_command "Add rpmfusion RPM repository" sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm # required for VLC
 
 # Add Google Chrome repo
 echo '[google-chrome]
@@ -82,8 +78,6 @@ then
 fi
 
 
-########### Installations #############
-
 # Remove unwanted packages; Update; Install my packages
 run_command "Remove unwanted packages" sudo dnf remove -y $REMOVE_PACKAGES
 sudo dnf upgrade -y
@@ -93,8 +87,6 @@ run_command "Install packages" sudo dnf install -y $PACKAGES
 for package in $PIP_PACKAGES; do
   pip show -q $package && echo "pip: $package is already installed" || run_command "Install $package" pip install $package
 done
-
-########### GIT #############
 
 # Create git repositories folder
 if [ ! -d $REPO_FOLDER ]; then
@@ -112,7 +104,6 @@ for repo in $MY_GIT_REPOS; do
 done
 popd "$@" > /dev/null
 
-
 # Configure global git user
 run_command "Configure global git user" git config --global user.name \"Beni Peled\"
 run_command "Configure global git email" git config --global user.email benipeled@gmail.com
@@ -126,13 +117,15 @@ if [ ! -h $GIT_DIFF_LINK ]; then
 fi
 
 # Gnome Extensions
+run_command "Add flatpak repo (flathub)" flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+run_command "Install gnome extension (Extensions)" flatpak install -y flathub org.gnome.Extensions
+
 gnome-extensions disable background-logo@fedorahosted.org
 gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
 gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
 
 # Keyboard Shortcuts
 # Note: for adding more shortcuts, make sure to increase the the 'custom' id, ex. custom1, custom2 etc.
-# Flameshot
 gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name "Flameshot"
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command "flameshot gui"

@@ -36,7 +36,7 @@ alias black='black --line-length=78 --target-version=py36'
 alias cdr='cd $GIT_REPO_DIR'
 alias cdm='cd $GIT_REPO_DIR/my-tool-box'
 alias cdp='cd $GIT_REPO_DIR/scylla-pkg'
-alias cds='cd $GIT_REPO_DIR/scylladb'
+alias cds='cd $GIT_REPO_DIR/scylla'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias k='kubectl'
@@ -60,4 +60,4 @@ function rr () { git rebase -i HEAD~$1; }
 
 export PATH=$PATH:/home/beni.peled/bin
 
-source '/home/beni.peled/lib/azure-cli/az.completion'
+#source '/home/beni.peled/lib/azure-cli/az.completion'
