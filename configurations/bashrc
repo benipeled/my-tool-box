@@ -1,5 +1,6 @@
-# My bash modificatoins
-# ------------------
+# --------------------------------------
+#          My bash modifications
+# --------------------------------------
 
 export VISUAL=vim
 export EDITOR="$VISUAL"
@@ -40,7 +41,7 @@ alias cds='cd $GIT_REPO_DIR/scylla'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias k='kubectl'
-alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/github/get_issues.py"
+alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/get_github_issues.py"
 
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
