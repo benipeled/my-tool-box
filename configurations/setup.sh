@@ -112,10 +112,10 @@ run_command "Add rpmfusion RPM repository" "sudo dnf install -y https://download
 
 run_command "Add Google Chrome repo" "echo '[google-chrome]
 name=google-chrome
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+baseurl=https://dl.google.com/linux/chrome/rpm/stable/$basearch
 enabled=1
 gpgcheck=1
-gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub' | sudo tee /etc/yum.repos.d/google-chrome.repo"
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub' | sudo tee /etc/yum.repos.d/google-chrome.repo"
 
 run_command "Add PyCharm repo" "echo '[phracek-PyCharm]
 name=Copr repo for PyCharm owned by phracek
