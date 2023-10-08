@@ -204,3 +204,52 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding "<Ctrl><Alt>Q"
 
 gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
+
+
+# Enable minimize and maximize buttons
+run_command "Enable minimize and maximize buttons" "gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'"
+
+# Add startup applications
+run_command "Add Firefox to startup applications" "cat <<EOF > ~/.config/autostart/firefox.desktop
+[Desktop Entry]
+Type=Application
+Name=Firefox
+Exec=firefox
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+
+run_command "Add Chrome to startup applications" "cat <<EOF > ~/.config/autostart/google-chrome.desktop
+[Desktop Entry]
+Type=Application
+Name=Google Chrome
+Exec=google-chrome
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+
+run_command "Add PyCharm to startup applications" "cat <<EOF > ~/.config/autostart/pycharm.desktop
+[Desktop Entry]
+Type=Application
+Name=PyCharm
+Exec=pycharm-community
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+
+run_command "Add Yakuake to startup applications" "cat <<EOF > ~/.config/autostart/yakuake.desktop
+[Desktop Entry]
+Type=Application
+Name=Yakuake
+Exec=yakuake
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
