@@ -43,6 +43,7 @@ alias cdp='cd $GIT_REPO_DIR/scylla-pkg'
 alias cds='cd $GIT_REPO_DIR/scylla'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
+alias diff='clear && git diff'
 alias k='kubectl'
 alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/get_github_issues.py"
 
