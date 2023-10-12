@@ -20,7 +20,7 @@ PACKAGES="wget vim ansible \
 	pycharm-community google-cloud-cli \
 	"
 REMOVE_PACKAGES="nano-default-editor"
-PIP_PACKAGES='black api4jenkins boto3 prettytable'
+PIP_PACKAGES='black api4jenkins boto3 prettytable pygithub'
 
 GIT_REPO_FOLDER=~/repos
 GIT_REPO_LIST=(
