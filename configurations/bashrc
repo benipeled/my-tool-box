@@ -39,14 +39,12 @@ alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias black='black --line-length=78 --target-version=py36'
 alias cdr='cd $GIT_REPO_DIR'
 alias cdm='cd $GIT_REPO_DIR/my-tool-box'
-alias cdp='cd $GIT_REPO_DIR/scylla-pkg'
-alias cds='cd $GIT_REPO_DIR/scylla'
 alias rebase='git pull --rebase'
 alias rrebase='git pull --rebase upstream'
 alias diff='clear && git diff'
-alias k='kubectl'
-alias gg="$GIT_REPO_DIR/scylla-pkg/scripts/get_github_issues.py"
 
+# Kubernetes
+alias k='kubectl'
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
 # User specific Functions
@@ -62,7 +60,3 @@ function soldeactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol deactivate
 
 # git rebase interactive
 function rr () { git rebase -i HEAD~$1; }
-
-export PATH=$PATH:/home/beni.peled/bin
-
-#source '/home/beni.peled/lib/azure-cli/az.completion'
