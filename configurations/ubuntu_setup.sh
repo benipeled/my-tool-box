@@ -113,6 +113,8 @@ run_command "Remove unnecessary packages" "sudo apt-get remove -y $REMOVE_PACKAG
 run_command "Upgrading packages" "sudo apt-get upgrade -y"
 run_command "Installing packages" "sudo apt-get install -y $PACKAGES"
 
+run_command "Installing fstail" "sudo wget -O /usr/local/bin/fstail https://github.com/alexellis/fstail/releases/download/0.1.0/fstail && sudo chmod +x /usr/local/bin/fstail"
+
 # Install pip packages if they are not already installed
 for package in $PIP_PACKAGES; do
   if ! pip show -q $package > /dev/null; then
