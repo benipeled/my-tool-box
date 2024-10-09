@@ -13,10 +13,16 @@ PACKAGES="wget vim ansible \
     telnet vim npm vlc htop \
     terraform packer google-chrome-stable \
     python3-pip python3-jinja2 code"
-    #pycharm-community
     
 REMOVE_PACKAGES="nano"
 PIP_PACKAGES='black api4jenkins ipython'
+
+PYCHARM_VERSION="2024.2.3"
+PYCHARM_URL="https://download.jetbrains.com/python/pycharm-community-$PYCHARM_VERSION.tar.gz"
+PYCHARM_INSTALL_DIR="/opt"
+PYCHARM_ICON_PATH="/usr/share/applications/pycharm.desktop"
+PYCHARM_FILETYPES_DIR="$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/filetypes"
+PYCHARM_FILETYPE_URL="https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/Jenkinsfile.xml"
 
 GIT_REPO_FOLDER=~/repos
 GIT_REPO_LIST=(
@@ -95,6 +101,34 @@ for arg in "$@"; do
     ;;
   esac
 done
+
+
+install_pycharm() {
+  if [ -d "$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION" ]; then
+      return
+  fi
+
+  run_command "Downloading PyCharm $PYCHARM_VERSION" "wget \"$PYCHARM_URL\" -O /tmp/pycharm-$PYCHARM_VERSION.tar.gz"
+  run_command "Installing PyCharm $PYCHARM_VERSION" "sudo tar -xzf /tmp/pycharm-$PYCHARM_VERSION.tar.gz -C \"$PYCHARM_INSTALL_DIR\""
+  run_command "Removing downloaded archive" "rm /tmp/pycharm-$PYCHARM_VERSION.tar.gz"
+
+  if [ ! -d "$PYCHARM_FILETYPES_DIR" ]; then
+      run_command "Creating filetypes directory" "sudo mkdir -p \"$PYCHARM_FILETYPES_DIR\""
+  fi
+
+  run_command "Downloading Jenkinsfile support" "wget \"$PYCHARM_FILETYPE_URL\" -O \"$PYCHARM_FILETYPES_DIR/jenkinsfile.xml\""
+  run_command "Updating PyCharm app icon" "sudo tee $PYCHARM_ICON_PATH > /dev/null <<EOL
+[Desktop Entry]
+Version=$PYCHARM_VERSION
+Type=Application
+Name=PyCharm Community
+Exec=$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/bin/pycharm.sh
+Icon=$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/bin/pycharm.png
+Comment=Integrated Development Environment
+Categories=Development;IDE;
+Terminal=false
+EOL"
+}
 
 
 # Add repos
@@ -203,3 +237,5 @@ NoDisplay=false
 X-GNOME-Autostart-enabled=true
 X-GNOME-Autostart-Delay=0
 EOF"
+
+install_pycharm
