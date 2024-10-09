@@ -5,22 +5,30 @@
 # line options.
 #
 # Run the following command to download and execute the script:
-# curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/ubuntu_setup.sh | sudo bash
+# curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/setup.sh | sudo bash
 
 PACKAGES="wget vim ansible \
-    git flameshot nmap \
-    keepassxc gnome-tweaks \
-    telnet vim npm vlc htop \
-    terraform packer google-chrome-stable \
-    python3-pip python3-jinja2 code"
-    #pycharm-community
-    
-REMOVE_PACKAGES="nano"
-PIP_PACKAGES='black api4jenkins ipython'
+	git flameshot nmap \
+	yakuake keepassxc gnome-tweaks \
+	podman podman-compose buildah \
+	awscli ipython telnet \
+	vim-default-editor \
+	npm gh vlc htop \
+	terraform packer \
+	google-chrome-stable \
+	python3-pip python3-jinja2-cli golang \
+	pycharm-community google-cloud-cli \
+	"
+REMOVE_PACKAGES="nano-default-editor"
+PIP_PACKAGES='black api4jenkins boto3 prettytable pygithub'
 
 GIT_REPO_FOLDER=~/repos
 GIT_REPO_LIST=(
   git@github.com:benipeled/my-tool-box.git
+  git@github.com:benipeled/scylla.git
+  git@github.com:benipeled/scylla-pkg.git
+  git@github.com:benipeled/scylla-machine-image.git
+  git@github.com:benipeled/scylla-manager.git
 )
 
 # For more colors see https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
@@ -60,7 +68,7 @@ run_command() {
   # @command: the command to run
   #
   # Example:
-  #   run_command "Install git" "sudo apt install git"
+  #   run_command "Install git" "sudo dnf install git"
 
   cmd_message="$1"
   print_start "$cmd_message"
@@ -98,22 +106,41 @@ done
 
 
 # Add repos
-run_command "Add Google Chrome repo" "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list"
-run_command "Add HashiCorp repo" "wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null  && echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main' | sudo tee /etc/apt/sources.list.d/hashicorp.list"
-run_command "Add Microsoft repo" "wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -&& echo 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' | sudo tee /etc/apt/sources.list.d/vscode.list"
-#run_command "Add Docker repo" "sudo apt-get update && sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'"
+run_command "Add github RPM repository" "sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo"
+run_command "Add hashicorp RPM repository" "sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo"
+run_command "Add rpmfusion RPM repository" "sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm # required for VLC"
+
+run_command "Add Google Chrome repo" "echo '[google-chrome]
+name=google-chrome
+baseurl=https://dl.google.com/linux/chrome/rpm/stable/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub' | sudo tee /etc/yum.repos.d/google-chrome.repo"
+
+run_command "Add PyCharm repo" "echo '[phracek-PyCharm]
+name=Copr repo for PyCharm owned by phracek
+baseurl=https://copr-be.cloud.fedoraproject.org/results/phracek/PyCharm/fedora-\$releasever-\$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/phracek/PyCharm/pubkey.gpg
+enabled=1' | sudo tee /etc/yum.repos.d/pycharm-phracek-copr.repo"
+
+run_command "Add gCloud CLI repo" "'[google-cloud-cli]
+name=Google Cloud CLI
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg' | sudo tee /etc/yum.repos.d/google-cloud-sdk.repo"
 
 # Update .bashrc file if it doesn't already include custom modifications
 if ! grep -q "My bash modifications" ~/.bashrc; then
-  run_command "Updating .bashrc file with custom settings" "wget -q -O - https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/bashrc >> ~/.bashrc"
+  run_command "Updating .bashrc file with custom settings" "curl -sSL https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/bashrc >> ~/.bashrc"
 fi
 
-run_command "Update package index files" "sudo apt-get update"
-run_command "Remove unnecessary packages" "sudo apt-get remove -y $REMOVE_PACKAGES"
-run_command "Upgrading packages" "sudo apt-get upgrade -y"
-run_command "Installing packages" "sudo apt-get install -y $PACKAGES"
-
-run_command "Installing fstail" "sudo wget -O /usr/local/bin/fstail https://github.com/alexellis/fstail/releases/download/0.1.0/fstail && sudo chmod +x /usr/local/bin/fstail"
+run_command "Remove unnecessary packages" "sudo dnf remove -y $REMOVE_PACKAGES"
+run_command "Upgrading installed packages" "sudo dnf upgrade -y"
+run_command "Installing required packages" "sudo dnf install -y $PACKAGES"
 
 # Install pip packages if they are not already installed
 for package in $PIP_PACKAGES; do
@@ -145,29 +172,29 @@ run_command "Configuring global git email" "git config --global user.email benip
 
 # Configure git diff-highlight
 if [ ! -h '/usr/local/bin/diff-highlight' ]; then
-  run_command "Configuring git diff-highlight symlink" "sudo ln -s '/usr/share/doc/git/contrib/diff-highlight/diff-highlight' '/usr/local/bin/diff-highlight'"
-  run_command "Configuring git diff-highlight" "git config --global pager.diff 'diff-highlight'"
-  run_command "Configuring git diff-highlight" "git config --global pager.show 'diff-highlight'"
+  run_command "Configuring git diff-highlight symlink" "sudo ln -s '/usr/share/git-core/contrib/diff-highlight' '/usr/local/bin/diff-highlight'"
+  run_command "Configuring git diff-highlight" "git config --global pager.diff 'diff-highlight | less'"
+  run_command "Configuring git diff-highlight" "git config --global pager.show 'diff-highlight | less'"
 fi
 
 # Add flathub repo if it doesn't exist
-#if ! flatpak remotes | grep -q flathub; then
-#  run_command "Add flathub repo" "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
-#fi
+if ! flatpak remotes | grep -q flathub; then
+  run_command "Add flathub repo" "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
+fi
 
 # Enable flathub repo if it's not enabled
-#if ! flatpak remotes | grep -q 'flathub'; then
-#  run_command "Enable flathub repo" "flatpak remote-modify --enable flathub"
-#fi
+if ! flatpak remotes | grep -q 'flathub'; then
+  run_command "Enable flathub repo" "flatpak remote-modify --enable flathub"
+fi
 
 # Install Extensions from flathub if it's not already installed
-#if ! flatpak list | grep -q org.gnome.Extensions; then
-#  run_command "Install Extensions" "flatpak install -y flathub org.gnome.Extensions"
-#fi
+if ! flatpak list | grep -q org.gnome.Extensions; then
+  run_command "Install Extensions" "flatpak install -y flathub org.gnome.Extensions"
+fi
 
-#gnome-extensions disable background-logo@fedorahosted.org
-#gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
-#gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
+gnome-extensions disable background-logo@fedorahosted.org
+gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
+gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
 
 # Keyboard Shortcuts
 # Note: for adding more shortcuts, make sure to increase the the 'custom' id, ex. custom1, custom2 etc.
@@ -178,6 +205,7 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 
 gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
 
+
 # Enable minimize and maximize buttons
 run_command "Enable minimize and maximize buttons" "gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'"
 
@@ -187,6 +215,28 @@ run_command "Add Firefox to startup applications" "cat <<EOF > ~/.config/autosta
 Type=Application
 Name=Firefox
 Exec=firefox
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+
+run_command "Add Chrome to startup applications" "cat <<EOF > ~/.config/autostart/google-chrome.desktop
+[Desktop Entry]
+Type=Application
+Name=Google Chrome
+Exec=google-chrome
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+
+run_command "Add PyCharm to startup applications" "cat <<EOF > ~/.config/autostart/pycharm.desktop
+[Desktop Entry]
+Type=Application
+Name=PyCharm
+Exec=pycharm-community
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
