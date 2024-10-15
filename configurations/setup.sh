@@ -19,7 +19,7 @@ PYCHARM_VERSION="2024.2.3"
 PYCHARM_URL="https://download.jetbrains.com/python/pycharm-community-$PYCHARM_VERSION.tar.gz"
 PYCHARM_INSTALL_DIR="/opt"
 PYCHARM_ICON_PATH="/usr/share/applications/pycharm.desktop"
-PYCHARM_FILETYPES_DIR="$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/filetypes"
+PYCHARM_FILETYPES_DIR="$PYCHARM_INSTALL_DIR/pycharm-community-$PYCHARM_VERSION/filetypes"
 PYCHARM_FILETYPE_URL="https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/Jenkinsfile.xml"
 
 GIT_REPO_FOLDER=~/repos
@@ -102,7 +102,7 @@ done
 
 
 install_pycharm() {
-  if [ -d "$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION" ]; then
+  if [ -d "$PYCHARM_INSTALL_DIR/pycharm-community-$PYCHARM_VERSION" ]; then
       return
   fi
 
@@ -114,7 +114,7 @@ install_pycharm() {
       run_command "Creating filetypes directory" "sudo mkdir -p \"$PYCHARM_FILETYPES_DIR\""
   fi
 
-  run_command "Downloading Jenkinsfile support" "wget \"$PYCHARM_FILETYPE_URL\" -O \"$PYCHARM_FILETYPES_DIR/jenkinsfile.xml\""
+  run_command "Downloading Jenkinsfile support" "sudo wget \"$PYCHARM_FILETYPE_URL\" -O \"$PYCHARM_FILETYPES_DIR/jenkinsfile.xml\""
   run_command "Updating PyCharm app icon" "sudo tee $PYCHARM_ICON_PATH > /dev/null <<EOL
 [Desktop Entry]
 Version=$PYCHARM_VERSION
