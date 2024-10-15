@@ -209,6 +209,9 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 
 gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
 
+# Add hebrew keyboard layout
+gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('xkb', 'il')]"
+
 # Enable minimize and maximize buttons
 run_command "Enable minimize and maximize buttons" "gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'"
 
