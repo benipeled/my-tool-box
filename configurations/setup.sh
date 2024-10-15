@@ -122,11 +122,12 @@ install_pycharm() {
 Version=$PYCHARM_VERSION
 Type=Application
 Name=PyCharm Community
-Exec=$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/bin/pycharm.sh
-Icon=$PYCHARM_INSTALL_DIR/pycharm-$PYCHARM_VERSION/bin/pycharm.png
+Exec=$PYCHARM_INSTALL_DIR/pycharm-community-$PYCHARM_VERSION/bin/pycharm.sh
+Icon=$PYCHARM_INSTALL_DIR/pycharm-community-$PYCHARM_VERSION/bin/pycharm.png
 Comment=Integrated Development Environment
 Categories=Development;IDE;
 Terminal=false
+StartupWMClass=jetbrains-pycharm
 EOL"
 }
 
