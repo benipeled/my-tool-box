@@ -151,7 +151,7 @@ run_command "Installing fstail" "sudo wget -O /usr/local/bin/fstail https://gith
 # Install pip packages if they are not already installed
 for package in $PIP_PACKAGES; do
   if ! pip show -q $package > /dev/null; then
-    run_command "Install $package" "pip install $package"
+    run_command "Install $package" "pip install --break-system-packages $package"
   fi
 done
 
