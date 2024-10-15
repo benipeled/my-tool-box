@@ -8,11 +8,9 @@
 # curl -s https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/setup.sh | sudo bash
 
 PACKAGES="wget vim ansible \
-    git flameshot nmap \
-    keepassxc gnome-tweaks \
-    telnet vim npm vlc htop \
-    terraform packer google-chrome-stable \
-    python3-pip python3-jinja2 code"
+    git flameshot nmap keepassxc gnome-tweaks \
+    telnet vim npm vlc htop google-chrome-stable \
+    python3-pip python3-jinja2"
     
 REMOVE_PACKAGES="nano"
 PIP_PACKAGES='black api4jenkins ipython'
