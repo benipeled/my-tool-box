@@ -129,6 +129,15 @@ StartupWMClass=jetbrains-pycharm
 EOL"
 }
 
+install_forticlient() {
+  run_command "Add FortiClient gpg key" "wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg"
+  run_command "Add FortiClient repo" "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free' | sudo tee /etc/apt/sources.list.d/fortinet.list"
+  run_command "Download FortiClient dependencies - libappindicator1" "wget http://mirrors.kernel.org/ubuntu/pool/universe/liba/libappindicator/libappindicator1_12.10.1+20.10.20200706.1-0ubuntu1_amd64.deb"
+  run_command "Download FortiClient dependencies - libdbusmenu-gtk4" "wget http://mirrors.kernel.org/ubuntu/pool/universe/libd/libdbusmenu/libdbusmenu-gtk4_16.04.1+18.10.20180917-0ubuntu8_amd64.deb"
+  run_command "Install FortiClient dependencies" "sudo dpkg -i libappindicator*.deb libdbusmenu-gtk4*.deb"
+  run_command "Install FortiClient" "sudo apt-get update && sudo apt-get install -y forticlient"
+  run_command "Remove FortiClient local packages" "rm -rf libappindicator*.deb libdbusmenu-gtk4*.deb"
+}
 
 # Add repos
 run_command "Add Google Chrome repo" "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list"
@@ -239,3 +248,4 @@ X-GNOME-Autostart-Delay=0
 EOF"
 
 install_pycharm
+install_forticlient
