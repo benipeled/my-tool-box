@@ -129,6 +129,17 @@ StartupWMClass=jetbrains-pycharm
 EOL"
 }
 
+install_forticlient() {
+  FORTICLIENT_VERSION="7.4.0.1636"
+
+  if dpkg -l | grep -q "forticlient"; then
+    print_skip "FortiClient is already installed, skipping installation"
+    return
+  fi
+
+  run_command "Downloading FortiClient $FORTICLIENT_VERSION" "wget https://filestore.fortinet.com/forticlient/forticlient_vpn_$FORTICLIENT_VERSION_amd64.deb"
+  run_command "Installing FortiClient $FORTICLIENT_VERSION" "sudo apt-get update && sudo apt-get install -y ./forticlient_vpn_$FORTICLIENT_VERSION_amd64.deb"
+}
 
 # Add repos
 run_command "Add Google Chrome repo" "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list"
@@ -239,3 +250,4 @@ X-GNOME-Autostart-Delay=0
 EOF"
 
 install_pycharm
+install_forticlient
