@@ -195,8 +195,8 @@ run_command "Configuring global git email" "git config --global user.email benip
 # Configure git diff-highlight
 if [ ! -h '/usr/local/bin/diff-highlight' ]; then
   run_command "Configuring git diff-highlight symlink" "sudo ln -s '/usr/share/doc/git/contrib/diff-highlight/diff-highlight' '/usr/local/bin/diff-highlight'"
-  run_command "Configuring git diff-highlight" "git config --global pager.diff 'diff-highlight'"
-  run_command "Configuring git diff-highlight" "git config --global pager.show 'diff-highlight'"
+  run_command "Configuring git diff-highlight" "git config --global pager.diff 'diff-highlight | less'"
+  run_command "Configuring git diff-highlight" "git config --global pager.show 'diff-highlight | less'"
 fi
 
 # Add flathub repo if it doesn't exist
