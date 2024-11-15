@@ -1,62 +1,54 @@
 # --------------------------------------
-#          My bash modifications
+#           My bash modifications
 # --------------------------------------
 
+# --- Environment Variables
 export VISUAL=vim
 export EDITOR="$VISUAL"
-
-export GITHUB_TOKEN='<ADD-YOUR-TOKEN-HERE>'
 export GIT_REPO_DIR="$HOME/repos"
-
-export JENKINS_USERNAME='<USERNAME>'
-export JENKINS_PASSWORD='<PASSWORD>'
-
 export HISTSIZE=
 export HISTFILESIZE=
 export HISTTIMEFORMAT="[%F %T] "
+export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
+# --- Tokens
+export GITLAB_TOKEN='<ADD-YOUR-TOKEN-HERE>'
+export GITHUB_TOKEN='<ADD-YOUR-TOKEN-HERE>'
+export JENKINS_USERNAME='<USERNAME>'
+export JENKINS_PASSWORD='<PASSWORD>'
 
-git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
-export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(git_branch)\[\033[00m\] $ "
-
-# User specific aliases
-# ---------------------
-
-# Short and clear git-log summary
-alias log='git log --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
-alias logall='git log --all --graph --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
-alias mylog='git log --author=$USER --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
-
-# Show folders/files size in current directory
-alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)) {if($s<1024) {printf("%.1f",$s);print "$_\t$f"; last};$s=$s/1024}'\'
-
-# The 20 most used processes (by memory)
-alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
-
+# --- Aliases
 alias setup='$GIT_REPO_DIR/my-tool-box/configurations/setup.sh'
 alias less='less -I'
 alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias black='black --line-length=78 --target-version=py36'
+alias black='black --line-length=78 --target-version=py39'
 alias cdr='cd $GIT_REPO_DIR'
 alias cdm='cd $GIT_REPO_DIR/my-tool-box'
-alias rebase='git pull --rebase'
-alias rrebase='git pull --rebase upstream'
+alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
+
+# --- FortiClient VPN Aliases
+alias vpn='forticlient vpn connect TLV1'
+alias vpns='forticlient vpn status'
+alias dvpn='forticlient vpn disconnect'
+
+# --- Git Aliases & Functions
+alias rrebase='git pull --rebase'
 alias diff='clear && git diff'
+alias show='clear && git show'
+alias log='git log --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+alias mylog='git log --author=$USER --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+rr() { git rebase -i HEAD~$1; }
+git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
 
-# Kubernetes
+# --- Kubernetes Alias
 alias k='kubectl'
-export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
-# User specific Functions
-# -----------------------
+# --- SSH Functions
+sshrm() { /usr/bin/sed -i "$1d" "$HOME/.ssh/known_hosts"; }
 
-# Delete a line from known_hosts ex. sshrm 246
-function sshrm() { /usr/bin/sed -i "$1d" $HOME/.ssh/known_hosts; }
-function jenkins-validation() { curl -X POST --user $JENKINS_USERNAME:$JENKINS_PASSWORD -F "jenkinsfile=<$1" https://$JENKINS_URL/pipeline-model-converter/validate; }
+# --- Jenkins Functions
+jenkins-validation() { curl -X POST --user "$JENKINS_USERNAME:$JENKINS_PASSWORD" -F "jenkinsfile=<$1" "https://$JENKINS_URL/pipeline-model-converter/validate"; }
 
-# Activate/Deactivate console connection by ipmitool
-function solactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol activate; }
-function soldeactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol deactivate; }
+# --- Customized Shell Prompt
+export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(git_branch)\[\033[00m\] $ "
 
-# git rebase interactive
-function rr () { git rebase -i HEAD~$1; }
