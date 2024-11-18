@@ -149,6 +149,17 @@ install_docker() {
   run_command "Granting docker privileges" "sudo usermod -aG docker $USER"
 }
 
+install_k9s() {
+  if dpkg -l | grep -q "k9s"; then
+    print_skip "k9s is already installed, skipping installation"
+    return
+  fi
+
+  run_command "Downloading k9s deb package" "wget -P /tmp https://github.com/derailed/k9s/releases/download/v0.32.7/k9s_linux_amd64.deb"
+  run_command "Installing k9s" "sudo apt-get install -y /tmp/k9s_linux_amd64.deb"
+}
+
+
 # Add repos
 run_command "Add Google Chrome repo" "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list"
 
@@ -259,3 +270,4 @@ EOF"
 install_pycharm
 install_forticlient
 install_docker
+install_k9s
