@@ -133,7 +133,7 @@ install_forticlient() {
   FORTICLIENT_VERSION="7.4.0.1636"
 
   if dpkg -l | grep -q "forticlient"; then
-    print_skip "FortiClient is already installed, skipping installation"
+    print_skip "FortiClient is already installed"
     return
   fi
 
@@ -142,6 +142,11 @@ install_forticlient() {
 }
 
 install_docker() {
+  if dpkg -l | grep -q "docker-ce"; then
+    print_skip "Docker is already installed"
+    return
+  fi
+
   run_command "Installing Docker dependencies" "sudo apt-get update && sudo apt-get install -y ca-certificates curl"
   run_command "Downloading Docker GPG key" "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && sudo chmod a+r /etc/apt/keyrings/docker.asc"
   run_command "Adding Docker apt repository" "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \$(. /etc/os-release && echo \\\"\$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null"
@@ -151,7 +156,7 @@ install_docker() {
 
 install_k9s() {
   if dpkg -l | grep -q "k9s"; then
-    print_skip "k9s is already installed, skipping installation"
+    print_skip "k9s is already installed"
     return
   fi
 
@@ -195,7 +200,7 @@ for REPO_URL in "${GIT_REPO_LIST[@]}"; do
   if [ ! -d "$REPO_PATH" ]; then
     run_command "Clone $REPO_NAME" "git clone $REPO_URL $REPO_PATH"
   else
-    print_skip "$REPO_NAME already exists, skipping clone"
+    print_skip "$REPO_NAME already exists"
   fi
 done
 
