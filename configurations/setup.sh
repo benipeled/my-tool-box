@@ -204,10 +204,6 @@ for REPO_URL in "${GIT_REPO_LIST[@]}"; do
   fi
 done
 
-# Configure global git user
-run_command "Configuring global git user" "git config --global user.name 'Beni Peled'"
-run_command "Configuring global git email" "git config --global user.email benipeled@gmail.com"
-
 # Configure git diff-highlight
 if [ ! -h '/usr/local/bin/diff-highlight' ]; then
   run_command "Configuring git diff-highlight symlink" "sudo ln -s '/usr/share/doc/git/contrib/diff-highlight/diff-highlight' '/usr/local/bin/diff-highlight'"
