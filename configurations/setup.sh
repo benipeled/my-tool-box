@@ -10,7 +10,7 @@
 PACKAGES="wget vim ansible \
     git flameshot nmap keepassxc gnome-tweaks net-tools \
     telnet vim npm vlc htop google-chrome-stable \
-    python3-pip python3-jinja2"
+    python3-pip python3-jinja2 ccache"
     
 REMOVE_PACKAGES="nano"
 PIP_PACKAGES='black api4jenkins ipython'
