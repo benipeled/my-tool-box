@@ -9,13 +9,13 @@
 
 PACKAGES="wget vim ansible \
     git flameshot nmap keepassxc gnome-tweaks net-tools \
-    telnet vim npm vlc htop google-chrome-stable \
-    python3-pip python3-jinja2 ccache"
+    telnet vim vlc htop google-chrome-stable \
+    python3-pip python3-jinja2"
     
 REMOVE_PACKAGES="nano"
 PIP_PACKAGES='black api4jenkins ipython'
 
-PYCHARM_VERSION="2024.2.3"
+PYCHARM_VERSION="2025.2.4"
 PYCHARM_URL="https://download.jetbrains.com/python/pycharm-community-$PYCHARM_VERSION.tar.gz"
 PYCHARM_INSTALL_DIR="/opt"
 PYCHARM_ICON_PATH="/usr/share/applications/pycharm.desktop"
@@ -129,18 +129,6 @@ StartupWMClass=jetbrains-pycharm
 EOL"
 }
 
-install_forticlient() {
-  FORTICLIENT_VERSION="7.4.0.1636"
-
-  if dpkg -l | grep -q "forticlient"; then
-    print_skip "FortiClient is already installed"
-    return
-  fi
-
-  run_command "Downloading FortiClient $FORTICLIENT_VERSION" "wget https://filestore.fortinet.com/forticlient/forticlient_vpn_$FORTICLIENT_VERSION_amd64.deb"
-  run_command "Installing FortiClient $FORTICLIENT_VERSION" "sudo apt-get update && sudo apt-get install -y ./forticlient_vpn_$FORTICLIENT_VERSION_amd64.deb"
-}
-
 install_docker() {
   if dpkg -l | grep -q "docker-ce"; then
     print_skip "Docker is already installed"
@@ -211,25 +199,6 @@ if [ ! -h '/usr/local/bin/diff-highlight' ]; then
   run_command "Configuring git diff-highlight" "git config --global pager.show 'diff-highlight | less'"
 fi
 
-# Add flathub repo if it doesn't exist
-#if ! flatpak remotes | grep -q flathub; then
-#  run_command "Add flathub repo" "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
-#fi
-
-# Enable flathub repo if it's not enabled
-#if ! flatpak remotes | grep -q 'flathub'; then
-#  run_command "Enable flathub repo" "flatpak remote-modify --enable flathub"
-#fi
-
-# Install Extensions from flathub if it's not already installed
-#if ! flatpak list | grep -q org.gnome.Extensions; then
-#  run_command "Install Extensions" "flatpak install -y flathub org.gnome.Extensions"
-#fi
-
-#gnome-extensions disable background-logo@fedorahosted.org
-#gnome-extensions enable window-list@gnome-shell-extensions.gcampax.github.com
-#gnome-extensions enable places-menu@gnome-shell-extensions.gcampax.github.com
-
 # Keyboard Shortcuts
 # Note: for adding more shortcuts, make sure to increase the the 'custom' id, ex. custom1, custom2 etc.
 gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
@@ -269,6 +238,5 @@ X-GNOME-Autostart-Delay=0
 EOF"
 
 install_pycharm
-install_forticlient
 install_docker
 install_k9s
