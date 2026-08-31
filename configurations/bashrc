@@ -2,66 +2,44 @@
 #          My bash modifications
 # --------------------------------------
 
+# Editor and history
 export VISUAL=vim
 export EDITOR="$VISUAL"
-
 export HISTSIZE=
 export HISTFILESIZE=
 export HISTTIMEFORMAT="[%F %T] "
 
+# Paths
 export GIT_REPO_DIR="$HOME/repos"
 
-# ----------  TOKENS  ------------------
-export GITHUB_TOKEN='PLACE-HOLDER'
-
-
-
+# Prompt with git branch
 git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }
 export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(git_branch)\[\033[00m\] $ "
 
-# User specific aliases
-# ---------------------
-
-# Short and clear git-log summary
+# Aliases - Git
 alias log='git log --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
-alias mylog='git log --author=$USER --decorate=full --date=relative --date-order --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)"'
+alias mylog='log --author=$USER'
+alias rrebase='git pull --rebase'
+alias diff='git diff'
+alias status='git status'
+alias show='git show'
 
-# The 20 most used processes (by memory)
-alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
-
-alias setup='$GIT_REPO_DIR/my-tool-box/configurations/setup.sh'
-alias less='less -I'
-alias issh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias black='black --line-length=78 --target-version=py36'
+# Aliases - Navigation
 alias cdr='cd $GIT_REPO_DIR'
 alias cdm='cd $GIT_REPO_DIR/my-tool-box'
-alias rrebase='git pull --rebase'
-alias diff='clear && git diff'
-alias status='clear && git status'
-alias show='clear && git show'
 
+# Aliases - Tools
+alias setup='$GIT_REPO_DIR/my-tool-box/setup'
+alias less='less -I'
+alias sps='ps -eo user,pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 20'
+alias black='black --line-length=78'
 
-# Kubernetes
+# Aliases - Kubernetes
 alias k='kubectl'
 complete -o default -F __start_kubectl k
 export NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
 
-# User specific Functions
-# -----------------------
-
-# Delete a line from known_hosts ex. sshrm 246
-function sshrm() { /usr/bin/sed -i "$1d" $HOME/.ssh/known_hosts; }
-
-# Activate/Deactivate console connection by ipmitool
-function solactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol activate; }
-function soldeactivate () { ipmitool -I lanplus -H $1 -U $2 -P $3 sol deactivate; }
-
-# Extract *.xz file to *.log
-function xz-extract() { xz -dc "$1" > "${1%.*}.log"; }
-
-# git rebase interactive
-function rr () { git rebase -i HEAD~$1; }
-
-ping() { command ping "$(sed -E 's~^https?://([^/]+)/?.*~\1~' <<<"$1")"; }
-
-alias trans='trans --shell --brief'
+# Functions
+sshrm() { /usr/bin/sed -i "$1d" $HOME/.ssh/known_hosts; }
+xz-extract() { xz -dc "$1" > "${1%.*}.log"; }
+rr() { git rebase -i HEAD~$1; }

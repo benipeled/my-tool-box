@@ -1,0 +1,261 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh"
+
+PACKAGES="wget vim ansible git flameshot nmap keepassxc gnome-tweaks \
+  net-tools telnet vlc htop google-chrome-stable python3-pip"
+
+REMOVE_PACKAGES="nano"
+PIP_PACKAGES="black api4jenkins ipython jinja2"
+GIT_REPOS=(git@github.com:benipeled/my-tool-box.git)
+
+PYCHARM_VERSION="2025.2.4"
+K9S_VERSION="0.32.7"
+
+ORG_SETUP="$HOME/repos/my-org-toolbox/setup"
+
+for arg in "$@"; do
+  case $arg in
+    --debug) DEBUG=true ;;
+    --help)
+      echo "Usage: setup [--debug] [--help]"
+      echo "  --debug   Enable debug mode"
+      echo "  --help    Show this message"
+      exit 0
+      ;;
+    *)
+      echo "Error: Unknown option '$arg'. Use --help for help."
+      exit 1
+      ;;
+  esac
+done
+
+install_chrome_repo() {
+  if [ -f /etc/apt/sources.list.d/google-chrome.list ]; then
+    print_skip "Chrome repo already exists"
+    return
+  fi
+  run_command "Add Chrome repo" \
+    "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
+     echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | \
+     sudo tee /etc/apt/sources.list.d/google-chrome.list"
+}
+
+update_bashrc() {
+  if grep -q "My bash modifications" ~/.bashrc; then
+    print_skip ".bashrc already updated"
+    return
+  fi
+  run_command "Update .bashrc" \
+    "wget -q -O - https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/bashrc >> ~/.bashrc"
+}
+
+install_pycharm() {
+  local install_dir="/opt/pycharm-community-$PYCHARM_VERSION"
+
+  if [ -d "$install_dir" ]; then
+    print_skip "PyCharm $PYCHARM_VERSION already installed"
+    return
+  fi
+
+  run_command "Download PyCharm $PYCHARM_VERSION" \
+    "wget https://download.jetbrains.com/python/pycharm-community-$PYCHARM_VERSION.tar.gz -O /tmp/pycharm.tar.gz"
+  run_command "Extract PyCharm $PYCHARM_VERSION" \
+    "sudo tar -xzf /tmp/pycharm.tar.gz -C /opt && rm /tmp/pycharm.tar.gz"
+
+  local filetypes_dir="$install_dir/filetypes"
+  run_command "Create filetypes dir" "sudo mkdir -p $filetypes_dir"
+  run_command "Download Jenkinsfile support" \
+    "sudo wget -q https://raw.githubusercontent.com/benipeled/my-tool-box/main/configurations/Jenkinsfile.xml \
+     -O $filetypes_dir/jenkinsfile.xml"
+
+  run_command "Create PyCharm desktop entry" \
+    "sudo tee /usr/share/applications/pycharm.desktop > /dev/null <<EOF
+[Desktop Entry]
+Version=$PYCHARM_VERSION
+Type=Application
+Name=PyCharm Community
+Exec=$install_dir/bin/pycharm.sh
+Icon=$install_dir/bin/pycharm.png
+Comment=Python IDE
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-pycharm
+EOF"
+}
+
+install_docker() {
+  if dpkg -l | grep -q "docker-ce"; then
+    print_skip "Docker already installed"
+    return
+  fi
+
+  run_command "Install Docker dependencies" \
+    "sudo apt-get update && sudo apt-get install -y ca-certificates curl"
+  run_command "Add Docker GPG key" \
+    "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
+     sudo chmod a+r /etc/apt/keyrings/docker.asc"
+  run_command "Add Docker repo" \
+    "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+     https://download.docker.com/linux/ubuntu \$(. /etc/os-release && echo \\\"\$VERSION_CODENAME\\\") stable\" | \
+     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null"
+  run_command "Install Docker" \
+    "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
+     docker-buildx-plugin docker-compose-plugin docker-compose"
+  run_command "Add user to docker group" "sudo usermod -aG docker $USER"
+}
+
+install_k9s() {
+  if command -v k9s >/dev/null 2>&1; then
+    local installed_version=$(k9s version --short 2>/dev/null | grep -oP 'v\K[0-9.]+' || echo "unknown")
+    if [ "$installed_version" = "$K9S_VERSION" ]; then
+      print_skip "k9s $K9S_VERSION already installed"
+      return
+    fi
+  fi
+
+  run_command "Install k9s $K9S_VERSION" \
+    "wget -P /tmp https://github.com/derailed/k9s/releases/download/v$K9S_VERSION/k9s_linux_amd64.deb && \
+     sudo apt-get install -y /tmp/k9s_linux_amd64.deb && rm /tmp/k9s_linux_amd64.deb"
+}
+
+install_fstail() {
+  if [ -f /usr/local/bin/fstail ]; then
+    print_skip "fstail already installed"
+    return
+  fi
+
+  run_command "Install fstail" \
+    "sudo wget -q -O /usr/local/bin/fstail \
+     https://github.com/alexellis/fstail/releases/download/0.1.0/fstail && \
+     sudo chmod +x /usr/local/bin/fstail"
+}
+
+configure_git_diff() {
+  local current_diff=$(git config --global diff.colorMoved)
+  if [ "$current_diff" = "default" ]; then
+    print_skip "git diff already configured"
+    return
+  fi
+
+  run_command "Configure git diff" \
+    "git config --global diff.colorMoved default && \
+     git config --global diff.colorMovedWS allow-indentation-change"
+}
+
+configure_gnome() {
+  local current_binding=$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding 2>/dev/null || echo "")
+  if [ "$current_binding" != "'<Ctrl><Alt>Q'" ]; then
+    run_command "Configure Flameshot shortcut" \
+      "gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \
+       \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']\" && \
+       gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
+       name 'Flameshot' && \
+       gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
+       command 'flameshot gui' && \
+       gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
+       binding '<Ctrl><Alt>Q'"
+  else
+    print_skip "Flameshot shortcut already configured"
+  fi
+
+  local current_tab=$(gsettings get org.gnome.desktop.wm.keybindings switch-windows)
+  if [ "$current_tab" != "['<Alt>Tab']" ]; then
+    run_command "Configure Alt+Tab" \
+      "gsettings set org.gnome.desktop.wm.keybindings switch-windows \"['<Alt>Tab']\""
+  else
+    print_skip "Alt+Tab already configured"
+  fi
+
+  local current_sources=$(gsettings get org.gnome.desktop.input-sources sources)
+  if [[ ! "$current_sources" =~ "('xkb', 'il')" ]]; then
+    run_command "Add Hebrew keyboard" \
+      "gsettings set org.gnome.desktop.input-sources sources \"[('xkb', 'us'), ('xkb', 'il')]\""
+  else
+    print_skip "Hebrew keyboard already added"
+  fi
+
+  local current_buttons=$(gsettings get org.gnome.desktop.wm.preferences button-layout)
+  if [ "$current_buttons" != "':minimize,maximize,close'" ]; then
+    run_command "Enable window buttons" \
+      "gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'"
+  else
+    print_skip "Window buttons already enabled"
+  fi
+
+  mkdir -p ~/.config/autostart
+
+  if [ ! -f ~/.config/autostart/firefox.desktop ]; then
+    run_command "Add Firefox to startup" \
+      "cat > ~/.config/autostart/firefox.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Firefox
+Exec=firefox
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+  else
+    print_skip "Firefox startup already configured"
+  fi
+
+  if [ ! -f ~/.config/autostart/yakuake.desktop ]; then
+    run_command "Add Yakuake to startup" \
+      "cat > ~/.config/autostart/yakuake.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Yakuake
+Exec=yakuake
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=0
+EOF"
+  else
+    print_skip "Yakuake startup already configured"
+  fi
+}
+
+install_pip_packages() {
+  for package in $PIP_PACKAGES; do
+    if pip show -q $package > /dev/null 2>&1; then
+      print_skip "$package already installed"
+    else
+      run_command "Install $package" "pip install --break-system-packages $package"
+    fi
+  done
+}
+
+main() {
+  install_chrome_repo
+  update_bashrc
+
+  run_command "Update package index" "sudo apt-get update"
+  run_command "Remove packages" "sudo apt-get remove -y $REMOVE_PACKAGES"
+  run_command "Upgrade packages" "sudo apt-get upgrade -y"
+  install_packages "$PACKAGES"
+
+  install_fstail
+  install_pip_packages
+  clone_repos "$HOME/repos" "${GIT_REPOS[@]}"
+  configure_git_diff
+  configure_gnome
+
+  install_pycharm
+  install_docker
+  install_k9s
+
+  if [ -x "$ORG_SETUP" ]; then
+    echo ""
+    echo "Running org setup..."
+    "$ORG_SETUP" "$@"
+  elif [ -f "$ORG_SETUP" ]; then
+    echo ""
+    echo "Warning: $ORG_SETUP exists but is not executable"
+  fi
+}
+
+main "$@"
