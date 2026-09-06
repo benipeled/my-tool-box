@@ -133,6 +133,16 @@ install_fstail() {
      sudo chmod +x /usr/local/bin/fstail"
 }
 
+install_claude() {
+  if command -v claude >/dev/null 2>&1; then
+    print_skip "Claude Code already installed ($(claude --version | head -1))"
+    return
+  fi
+
+  run_command "Install Claude Code" \
+    "curl -fsSL https://claude.ai/install.sh | sh"
+}
+
 configure_git_diff() {
   local current_diff=$(git config --global diff.colorMoved)
   if [ "$current_diff" = "default" ]; then
@@ -248,6 +258,7 @@ main() {
   install_pycharm
   install_docker
   install_k9s
+  install_claude
 
   if [ -x "$ORG_SETUP" ]; then
     echo ""
