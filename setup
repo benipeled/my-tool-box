@@ -4,7 +4,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 
 PACKAGES="wget vim ansible git flameshot nmap keepassxc gnome-tweaks \
-  net-tools telnet vlc htop google-chrome-stable python3-pip"
+  net-tools telnet vlc htop google-chrome-stable python3-pip \
+  chrome-gnome-shell"
 
 REMOVE_PACKAGES="nano"
 PIP_PACKAGES="black api4jenkins ipython jinja2"
